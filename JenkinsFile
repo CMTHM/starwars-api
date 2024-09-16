@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    environment {
+        JAVA_HOME = tool name: 'jdk-17', type: 'jdk'
+        DOCKER_IMAGE_NAME = 'chintamani/insightvu'
+        DOCKER_TAG = 'latest'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clone your repository
+              checkout([$class: 'GitSCM', additionalCredentials: [], excludedCommitMessages: '', excludedRegions: '', excludedRevprop: '', excludedUsers: '', filterChangelog: false, ignoreDirPropChanges: false, includedRegions: '', locations: [[cancelProcessOnExternalsFail: true, credentialsId: '8eafbe87-f544-4b24-bc97-21058516c013', depthOption: 'infinity', ignoreExternalsOption: true, local: '.', remote: 'https://github.com/CMTHM/univu.git']], quietOperation: true, workspaceUpdater: [$class: 'UpdateUpdater']])
+          }
+        }
+
+        stage('Build') {
+            steps {
+                // Compile and package the application
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image
+                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run your tests
+                sh 'mvn test'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Login to DockerHub (assuming Docker credentials are set up in Jenkins)
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                        // Push the Docker image
+                        sh "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Deploy your application (e.g., using Kubernetes or Docker Compose)
+                echo 'Deploying application...'
+                // Example: Deploy to a Kubernetes cluster
+                // sh 'kubectl apply -f k8s/deployment.yaml'
+                // or using Docker Compose
+                // sh 'docker-compose up -d'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline succeeded!'
+        }
+
+        failure {
+            echo 'Pipeline failed.'
+        }
+
+        always {
+            echo 'This will always run, regardless of success or failure.'
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+  "Planets": {
+    "Tatooine": {"name": "Tatooine", "climate": "Arid", "terrain": "Desert"},
+    "Alderaan": {"name": "Alderaan", "climate": "Temperate", "terrain": "Grasslands, Mountains"}
+  },
+  "Spaceships": {
+    "TIE Fighter": {"name": "TIE Fighter", "model": "TIE/LN starfighter", "manufacturer": "Sienar Fleet Systems"},
+    "X-Wing": {"name": "X-Wing", "model": "T-65 X-wing starfighter", "manufacturer": "Incom T-65"}
+  },
+  "Vehicles": {
+    "Sand Crawler": {"name": "Sand Crawler", "model": "Bantha-II", "manufacturer": "Corellia Engineering Corporation"},
+    "Speeder": {"name": "Speeder", "model": "Swoop", "manufacturer": "Repulsorlift Technology"}
+  },
+  "People": {
+    "Luke Skywalker": {"name": "Luke Skywalker", "height": "1.72m", "mass": "73kg"},
+    "Darth Vader": {"name": "Darth Vader", "height": "2.02m", "mass": "136kg"}
+  },
+  "Films": {
+    "A New Hope": {"title": "A New Hope", "release_date": "1977-05-25", "director": "George Lucas"},
+    "The Empire Strikes Back": {"title": "The Empire Strikes Back", "release_date": "1980-05-21", "director": "Irvin Kershner"}
+  },
+  "Species": {
+    "Human": {"name": "Human", "classification": "Mammal", "average_lifespan": "120"},
+    "Wookiee": {"name": "Wookiee", "classification": "Mammal", "average_lifespan": "400"}
+  }
+}

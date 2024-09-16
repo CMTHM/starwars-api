@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starwars-microservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: starwars
+  template:
+    metadata:
+      labels:
+        app: starwars
+    spec:
+      containers:
+      - name: starwars
+        image: your-dockerhub-username/starwars-microservice:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: starwars-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: starwars
