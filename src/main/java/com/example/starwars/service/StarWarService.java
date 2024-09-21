@@ -3,13 +3,17 @@ package com.example.starwars.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.example.starwars.entity.UserInfo;
 import com.example.starwars.exception.ResourceNotFoundException;
+import com.example.starwars.repository.UserInfoRepository;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
@@ -17,10 +21,20 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 public class StarWarService {
     private static final Logger logger = LogManager.getLogger(StarWarService.class);
     private final RestTemplate restTemplate;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private UserInfoRepository repository; 
+    
     public StarWarService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+    public String addUser(UserInfo userInfo) {
+        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+        repository.save(userInfo);
+        return "user added to system ";
+    }    
 
     @Cacheable(value = "starWarsCache", key = "#type + '_' + #name")
     @CircuitBreaker(name = "starWarsCircuitBreaker", fallbackMethod = "fallbackGetEntityDetails")

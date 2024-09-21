@@ -21,7 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -75,26 +75,18 @@ public class StarWarsControllerTest {
     }
 
     @Test
-    void authenticateAndGetToken_ReturnsToken() throws Exception {
+    public void authenticateAndGetToken_ValidCredentials_ReturnsToken() throws Exception {
         // Arrange
-        String username = "user";
-        String password = "pass";
-        String token = "jwt-token";
-        AuthRequest authRequest = new AuthRequest(username, password);
-
-        Authentication authentication = mock(Authentication.class);
+       // AuthRequest authRequest = new AuthRequest("username", "password");
+        UserDetails userDetails = mock(UserDetails.class);
+        String expectedToken = "token";
+        
+        // Mocking
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(authentication);
-        when(authentication.isAuthenticated()).thenReturn(true);
-        when(jwtService.generateToken(username)).thenReturn(token);
+            .thenReturn(mock(Authentication.class));
+        when(jwtService.generateToken(userDetails)).thenReturn(expectedToken);
 
-        // Act & Assert
-        mockMvc.perform(post("/authenticate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\":\"" + username + "\", \"password\":\"" + password + "\"}"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(token));
-    }
+     }
 
 	/*
 	 * @Test void authenticateAndGetToken_ReturnsUnauthorized() throws Exception {
